@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/juanidiaz/liri-node-app/issues"
   },
-  "homepage": "https://github.com/juanidiaz/liri-node-app#readme"
+  "homepage": "https://github.com/juanidiaz/liri-node-app#readme",
+  "dependencies": {
+    "dateformat": "^3.0.3"
+  }
 }
