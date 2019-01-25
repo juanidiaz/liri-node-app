@@ -1,7 +1,12 @@
 ////// INCLUDING PACKAGES //////
 
-// Include the axios npm package
-var axios = require("axios");
+// Includes the FS package for reading and writing packages
+const fs = require("fs");
+
+// Include the axios npm package to manage the API calls
+const axios = require("axios");
+
+const Spotify = require('node-spotify-api');
 
 // require("dotenv").config();
 
@@ -18,6 +23,7 @@ var axios = require("axios");
 var action = process.argv[2]; // Action requested by used
 var argument = process.argv[3]; // Argument provided to process the user request
 
+
 //      NUMBER/INTEGER
 
 
@@ -25,56 +31,53 @@ var argument = process.argv[3]; // Argument provided to process the user request
 
 
 //      OBJECTS
+
 //var spotify = new Spotify(keys.spotify); // Spotify key
 
 ///////////////// SPOTIFY /////////////////
 // Client ID:     7c03e03564d04d528e06456c6b6c5137
-// Client Secret: 
-
-
+// Client Secret: 287bb704c758427b86f82b4711cc68df
 //////////////////////////////
 
+// Get the info of a song
+function getSonfInfo() {
 
-// Get concert infomration on an artist/band name here
-function getConcertInfo() {
+    var spotify = new Spotify({
+        id: '7c03e03564d04d528e06456c6b6c5137',
+        secret: '287bb704c758427b86f82b4711cc68df'
+    });
 
-    var dateFormat = require('dateformat');
+    var song = argument;
 
-    if (!argument) { // If there is no movie provided default into 'Mr. Nobody'
-        argument = 'The Who';
+    var params = {
+        type: 'track',
+        query: song
     };
 
-    // Replace spaces for ASCI equivalent '%20'
-    argument = argument.replace(' ', '%20').toLowerCase();
+    var querySpotify = 'https://api.spotify.com/v1/search?q=name:' + song + '&type=track&limit=10';
 
-    //console.log(argument);
+    console.log('xxx: ' + querySpotify);
 
-    // Build the query URL based on the title provided
-    var queryUrl = 'https://rest.bandsintown.com/artists/' + argument + '/events?app_id=codingbootcamp';
+    spotify
+        .request(querySpotify)
 
-    // Run a request with axios to the OMDB API
-    axios.get(queryUrl).then(
-        function (response) {
+        .then(function (data) {
 
-            //console.log(queryUrl);
+            // console.log(data);
+            // console.log('Song Details: ', data.tracks);
 
-            console.log('');
-            console.log('----------------------------------------');
-            console.log('-             CONCERT INFO             -');
-            console.log('----------------------------------------');
+            console.log('Artist: ' + data.tracks.items[0].artists[0].name);
+            console.log('Song: ' + data.tracks.items[0].name);
+            console.log('Preview Link: ' + data.tracks.items[0].preview_url);
+            console.log('Album: ' + data.tracks.items[0].album.name);
+        })
+        .catch(function (err) {
+            console.error('Error occurred: ' + err);
+        });
 
-            for (const key in response.data) {
-                console.log(' (' + (parseInt(key) + 1) + ')');
-                console.log(response.data[key].venue.name);
-                console.log(response.data[key].venue.city + ', ' + response.data[0].venue.region + ' (' + response.data[0].venue.country + ')');
-                console.log(dateFormat(response.data[key].datetime, "mm/dd/yyyy"));
-                console.log('----------------------------------------');
-            }
-        }
-    );
 };
 
-// Get the movie info of a movie
+// Get the info of a movie
 function getMovieInfo() {
 
     if (!argument) { // If there is no movie provided default into 'Mr. Nobody'
@@ -93,7 +96,7 @@ function getMovieInfo() {
     axios.get(queryUrl).then(
         function (response) {
             // Clear the console
-            console.log('\033[2J');
+            // console.log('\033[2J');
 
             console.log(queryUrl);
 
@@ -123,29 +126,62 @@ function getMovieInfo() {
     );
 };
 
-// First step is to define what is the user request
-switch (action) {
-    // concert-this '<artist/band name here>'
-    case 'concert-this':
-        getConcertInfo();
-        break;
+// Follow the action in a text file
+function doWhatIsay(file) {
 
-        // spotify-this-song '<song name here>'
-    case 'spotify-this-song':
+    fs.readFile(file, "utf8", function (err, data) {
+        if (err) {
+            return console.log(err);
+        }
 
-        break;
+        // Break the string down by comma separation and store the contents into the output array.
+        var output = data.split(",");
 
-        // movie-this '<movie name here>'
-    case 'movie-this':
-        getMovieInfo();
-        break;
+        // Clear the value of argument
+        argument = '';
 
-        // do-what-it-says
-    case 'do-what-it-says':
+        // Loop Through the newly created output array
+        for (var i = 1; i < output.length; i++) {
 
-        break;
+            // Build the argument variable with the info in the file
+            argument += output[i];
+        }
 
-    default:
-        console.log('You REALLY need to tell me what to do!')
-        break;
+        // Send the new action to the initial switch
+        welcome(output[0]);
+    });
+}
+
+// First function to run
+function welcome(action) {
+
+    // First step is to define what is the user request
+    switch (action) {
+        // concert-this '<artist/band name here>'
+        case 'concert-this':
+            getConcertInfo();
+            break;
+
+            // spotify-this-song '<song name here>'
+        case 'spotify-this-song':
+            getSonfInfo();
+            break;
+
+            // movie-this '<movie name here>'
+        case 'movie-this':
+            getMovieInfo();
+            break;
+
+            // do-what-it-says
+        case 'do-what-it-says':
+            doWhatIsay('random.txt');
+            break;
+
+        default:
+            console.log('You REALLY need to tell me what to do!')
+            break;
+    };
+
 };
+
+welcome(action);

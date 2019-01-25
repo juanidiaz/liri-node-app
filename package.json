@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/juanidiaz/liri-node-app#readme",
   "dependencies": {
-    "dateformat": "^3.0.3"
+    "dateformat": "^3.0.3",
+    "node-spotify-api": "^1.0.7"
   }
 }
