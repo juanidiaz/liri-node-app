@@ -8,6 +8,8 @@ const axios = require("axios");
 
 const Spotify = require('node-spotify-api');
 
+var request = require('request');
+
 // require("dotenv").config();
 
 
@@ -39,8 +41,48 @@ var argument = process.argv[3]; // Argument provided to process the user request
 // Client Secret: 287bb704c758427b86f82b4711cc68df
 //////////////////////////////
 
+
+// Get concert infomration on an artist/band name here
+function getConcertInfo() {
+
+    var dateFormat = require('dateformat');
+
+    if (!argument) { // If there is no movie provided default into 'Mr. Nobody'
+        argument = 'The Who';
+    };
+
+    // Replace spaces for ASCI equivalent '%20'
+    argument = argument.replace(' ', '%20').toLowerCase();
+
+    //console.log(argument);
+
+    // Build the query URL based on the title provided
+    var queryUrl = 'https://rest.bandsintown.com/artists/' + argument + '/events?app_id=codingbootcamp';
+
+    // Run a request with axios to the OMDB API
+    axios.get(queryUrl).then(
+        function (response) {
+
+            //console.log(queryUrl);
+
+            console.log('');
+            console.log('----------------------------------------');
+            console.log('-             CONCERT INFO             -');
+            console.log('----------------------------------------');
+
+            for (const key in response.data) {
+                console.log(' (' + (parseInt(key) + 1) + ')');
+                console.log(response.data[key].venue.name);
+                console.log(response.data[key].venue.city + ', ' + response.data[0].venue.region + ' (' + response.data[0].venue.country + ')');
+                console.log(dateFormat(response.data[key].datetime, "mm/dd/yyyy"));
+                console.log('----------------------------------------');
+            }
+        }
+    );
+};
+
 // Get the info of a song
-function getSonfInfo() {
+function getSongInfo() {
 
     var spotify = new Spotify({
         id: '7c03e03564d04d528e06456c6b6c5137',
@@ -164,7 +206,7 @@ function welcome(action) {
 
             // spotify-this-song '<song name here>'
         case 'spotify-this-song':
-            getSonfInfo();
+            getSongInfo();
             break;
 
             // movie-this '<movie name here>'
