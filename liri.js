@@ -10,7 +10,7 @@ const Spotify = require('node-spotify-api');
 
 var request = require('request');
 
-// require("dotenv").config();
+require("dotenv").config();
 
 
 ////// VARIABLES //////
@@ -35,12 +35,6 @@ var argument = process.argv[3]; // Argument provided to process the user request
 //      OBJECTS
 
 //var spotify = new Spotify(keys.spotify); // Spotify key
-
-///////////////// SPOTIFY /////////////////
-// Client ID:     7c03e03564d04d528e06456c6b6c5137
-// Client Secret: 287bb704c758427b86f82b4711cc68df
-//////////////////////////////
-
 
 // Get concert infomration on an artist/band name here
 function getConcertInfo() {
@@ -84,39 +78,37 @@ function getConcertInfo() {
 // Get the info of a song
 function getSongInfo() {
 
-    var spotify = new Spotify({
-        id: '7c03e03564d04d528e06456c6b6c5137',
-        secret: '287bb704c758427b86f82b4711cc68df'
-    });
-
+    //var spotify = require("./keys.js");
     var song = argument;
 
-    var params = {
+    var spotify = new Spotify({
+        id: process.env.SPOTIFY_ID,
+        secret: process.env.SPOTIFY_SECRET
+    });
+
+    spotify.search({
         type: 'track',
         query: song
-    };
+    }, function (err, data) {
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        }
 
-    var querySpotify = 'https://api.spotify.com/v1/search?q=name:' + song + '&type=track&limit=10';
+        // for (const key in data.tracks.items) {
+        //     console.log( '(' + (parseInt(key)+1) + ') ');
+        //     console.log( '  Artist:     ' + data.tracks.items[key].artists[0].name);
+        //     console.log( '  Song name:  ' + data.tracks.items[key].name);
+        //     console.log( '  Prieview:   ' + data.tracks.items[key].preview_url);
+        //     console.log( '  ALbum name: ' + data.tracks.items[key].album.name);
+        //     console.log('-------------------------------------------');
+        // }
 
-    console.log('xxx: ' + querySpotify);
+        console.log('  Artist:     ' + data.tracks.items[0].artists[0].name);
+        console.log('  Song name:  ' + data.tracks.items[0].name);
+        console.log('  Prieview:   ' + data.tracks.items[0].preview_url);
+        console.log('  Album name: ' + data.tracks.items[0].album.name);
 
-    spotify
-        .request(querySpotify)
-
-        .then(function (data) {
-
-            // console.log(data);
-            // console.log('Song Details: ', data.tracks);
-
-            console.log('Artist: ' + data.tracks.items[0].artists[0].name);
-            console.log('Song: ' + data.tracks.items[0].name);
-            console.log('Preview Link: ' + data.tracks.items[0].preview_url);
-            console.log('Album: ' + data.tracks.items[0].album.name);
-        })
-        .catch(function (err) {
-            console.error('Error occurred: ' + err);
-        });
-
+    });
 };
 
 // Get the info of a movie
