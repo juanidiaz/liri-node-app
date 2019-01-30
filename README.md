@@ -7,14 +7,40 @@
 This project is a LIRI (Language Interpretation and Recognition Interface); a command line node app that takes in parameters and gives you back data.
 
 ## INSTRUCTIONS
-1. First enter your name in the field below. You wont be able to continue without it.
-2. Select to play as `PLAYER 1` or `PLAYER 2`. If these buttons do not appear is becasue someone else is already playing.
-3. If you want to WATCH the game then click that button. If a player spot becomes available once you are watching you will se the PLAYER button.
-4. Once playing, select `ROCK`, `PAPER` or `SCISSORS` by clicking on the icon of your coosing.
-5. You will only see your oponent's choice when both of you have pick.
-6. You could either `WIN`, `TIE` or `LOOSE` your match. Once the result is shown, the game will reset and continue for a new match.
-7. If you want to leave the game and ve a viewer click `QUIT PLAYING`.
-8. **Make sure you don't close or refresh your browser as this will END YOUR GAME!**
+- To run this project you first need to clone this repository and create a `.env` file with a valid client ID and client Scret keys from Spotify. For information how to get these keys visit <https://developer.spotify.com>.
+
+1. Make sure you install all the NPM packages. To do this run:
+   - `npm install`
+
+2. Run the application file with the command:
+   - `node liri.js [ACTION] ['ARGUMENT"]`
+
+3. The valid arguments are:
+   * `concert-this`
+   * `spotify-this-song`
+   * `movie-this`
+   * `do-what-it-says`   
+
+* **"concert-this"** will find the information of the upcoming concert and presentation(s) of the **artist(s)** or **band** you enter as the argument. The data returned will include: *artist(s)/band name, name of the venue, venue location* and *dates of the event*. For example:
+    - `node liri.js concert-this Nickelback` or
+    - `node liri.js concert-this 'Lady Gaga'` **Use quotes for names with multiple words*
+
+* **"spotify-this-song"** will find the information of the **song title** you enter as the argument. The data returned will include: *artist(s)/band name, song title, a preview link of the song from Spotify* and *the album that the song is from.* For example:
+    - `node liri.js spotify-this-song Chumbawamba` or
+    - `node liri.js spotify-this-song 'La Bamba'` **Use quotes for names with multiple words*
+
+* **movie-this** will find the information of the **movie** you enter as the argument. The data returned will include: *title of the movie, year the movie came out, IMDB rating of the movie, Rotten Tomatoes rating of the movie, country where the movie was produced, language of the movie, plot of the movie* and *actors in the movie.* For example:
+    - `node liri.js movie-this Roma` or
+    - `node liri.js movie-this 'The Theory of Everything'` **Use quotes for names with multiple words*
+
+* **do-what-it-says** will take the text inside of `random.txt` and then use it to call one of LIRI's commands. Change the content of this file to perform any of the commands above. For example:
+    - `node liri.js concert-this Nickelback` or
+    - `node liri.js spotify-this-song Chumbawamba` or
+    - `node liri.js movie-this Roma`
+
+# SPECIAL 
+## If you use `liriToFile.js` instead of `liri.js` with the arguments explained above, the output of each mode will ALSO be saved *(appended)* into a `log.txt` text file.
+
 
 ## SCREENSHOTS
 ![Welcome](./assets/images/rps_welcome.png)
@@ -26,13 +52,14 @@ This project is a LIRI (Language Interpretation and Recognition Interface); a co
 ![Welcome](./assets/images/rps_viewer.png)
 
 ## BUILDING TOOLS
-- HTML, CSS
-- Javascript and jQuery
-- Bootstrap
-- Google Firebase (Realtime)
+- Javascript and node.js
+- NPM packages:
+    - AXIOS
+    - dotenv
+    - node-spotify-api
 
-
-## QUESTIONS OR COMMENTS
-- Logo taken from [http://www.redbits.com/iphone/rps/](http://www.redbits.com/iphone/rps/).
+## QUESTIONS, COMMENTS AND CREDITS
+- Concert info courtesy of [Bands In Town](https://www.bandsintown.com/).
+- Song track info courtesy of [Spotify](https://www.spotify.com).
+- Movie info courtesy of [IMDB](http://www.imdb.com).
 - Feel free to contact the developer @ <jdi@idiaz.ca>!
-- See the project [live](https://juanidiaz.github.io/RPS-Multiplayer/).

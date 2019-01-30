@@ -20,7 +20,27 @@ var dateFormat = require('dateformat');
 //      STRINGS/CHAR
 var action = process.argv[2]; // Action requested by used
 var argument = process.argv[3]; // Argument provided to process the user request
+var outputFile = 'log.txt' // File to save information.
 
+// This function will console log and append the 'stuff' simultaneously
+function consoleAndSave(stuff) {
+
+    console.log(stuff);
+
+    fs.appendFile(outputFile, (stuff + '\n'), function (err) {
+
+        // If an error was experienced we will log it.
+        if (err) {
+            console.log(err);
+        }
+
+        // If no error is experienced, we'll log the phrase "Content Added" to our node console.
+        else {
+            // console.log(stuff);
+        }
+    });
+
+}
 
 // Get concert infomration on an artist/band
 function getConcertInfo() {
@@ -35,7 +55,7 @@ function getConcertInfo() {
     // Replace spaces for ASCI equivalent '%20'
     band = band.replace(' ', '%20').toLowerCase();
 
-    //console.log(band);
+    //consoleAndSave(band);
 
     // Build the query URL based on the title provided
     var queryUrl = 'https://rest.bandsintown.com/artists/' + band + '/events?app_id=codingbootcamp';
@@ -45,17 +65,17 @@ function getConcertInfo() {
         function (response) {
 
             //Print the info requested
-            console.log('\n----------------------------------------');
-            console.log('-             CONCERT INFO             -');
-            console.log('----------------------------------------');
-            console.log('Artist: ' + argument);
-            console.log('----------------------------------------\n');
+            consoleAndSave('\n----------------------------------------');
+            consoleAndSave('-             CONCERT INFO             -');
+            consoleAndSave('----------------------------------------');
+            consoleAndSave('Artist: ' + argument);
+            consoleAndSave('----------------------------------------\n');
             for (const key in response.data) {
-                console.log(' (' + (parseInt(key) + 1) + ')');
-                console.log(response.data[key].venue.name);
-                console.log(response.data[key].venue.city + ', ' + response.data[0].venue.region + ' (' + response.data[0].venue.country + ')');
-                console.log(dateFormat(response.data[key].datetime, "mm/dd/yyyy"));
-                console.log('----------------------------------------');
+                consoleAndSave(' (' + (parseInt(key) + 1) + ')');
+                consoleAndSave(response.data[key].venue.name);
+                consoleAndSave(response.data[key].venue.city + ', ' + response.data[0].venue.region + ' (' + response.data[0].venue.country + ')');
+                consoleAndSave(dateFormat(response.data[key].datetime, "mm/dd/yyyy"));
+                consoleAndSave('----------------------------------------');
             }
         }
     );
@@ -86,13 +106,13 @@ function getSongInfo() {
         }
 
         //Print the info requested
-        console.log('\n----------------------------------------');
-        console.log('-               SONG INFO              -');
-        console.log('----------------------------------------\n');
-        console.log('  Artist:     ' + data.tracks.items[0].artists[0].name);
-        console.log('  Song name:  ' + data.tracks.items[0].name);
-        console.log('  Prieview:   ' + data.tracks.items[0].preview_url);
-        console.log('  Album name: ' + data.tracks.items[0].album.name);
+        consoleAndSave('\n----------------------------------------');
+        consoleAndSave('-               SONG INFO              -');
+        consoleAndSave('----------------------------------------\n');
+        consoleAndSave('  Artist:     ' + data.tracks.items[0].artists[0].name);
+        consoleAndSave('  Song name:  ' + data.tracks.items[0].name);
+        consoleAndSave('  Prieview:   ' + data.tracks.items[0].preview_url);
+        consoleAndSave('  Album name: ' + data.tracks.items[0].album.name);
 
     });
 };
@@ -107,7 +127,7 @@ function getMovieInfo() {
     // Replace spaces for ASCI equivalent '%20'
     argument = argument.replace(' ', '%20').toLowerCase();
 
-    //console.log(argument);
+    //consoleAndSave(argument);
 
     // Build the query URL based on the title provided
     var queryUrl = 'http://www.omdbapi.com/?t=' + argument + '&y=&plot=short&apikey=trilogy';
@@ -116,31 +136,31 @@ function getMovieInfo() {
     axios.get(queryUrl).then(
         function (response) {
             // Clear the console
-            // console.log('\033[2J');
+            // consoleAndSave('\033[2J');
 
-            //console.log(queryUrl);
+            //consoleAndSave(queryUrl);
 
             //Print the info requested
-            console.log('\n----------------------------------------');
-            console.log('-               MOVIE INFO             -');
-            console.log('----------------------------------------\n');
-            console.log('Title:                 ' + response.data.Title);
-            console.log('Release Year:          ' + response.data.Year);
+            consoleAndSave('\n----------------------------------------');
+            consoleAndSave('-               MOVIE INFO             -');
+            consoleAndSave('----------------------------------------\n');
+            consoleAndSave('Title:                 ' + response.data.Title);
+            consoleAndSave('Release Year:          ' + response.data.Year);
 
             // Confirm if the movie has IMDB rating
             if (response.data.Ratings[0].Source === 'Internet Movie Database') {
-                console.log('IMDB rating:           ' + response.data.Ratings[0].Value);
+                consoleAndSave('IMDB rating:           ' + response.data.Ratings[0].Value);
             };
 
             // Confirm if the movie has Rotten Tomatoes rating
             if (response.data.Ratings[1].Source === 'Rotten Tomatoes') {
-                console.log('Roten Tomatoes rating: ' + response.data.Ratings[1].Value);
+                consoleAndSave('Roten Tomatoes rating: ' + response.data.Ratings[1].Value);
             };
 
-            console.log('Country:               ' + response.data.Country);
-            console.log('Language:              ' + response.data.Language);
-            console.log('Plot:                  ' + response.data.Plot);
-            console.log('Actors:                ' + response.data.Actors);
+            consoleAndSave('Country:               ' + response.data.Country);
+            consoleAndSave('Language:              ' + response.data.Language);
+            consoleAndSave('Plot:                  ' + response.data.Plot);
+            consoleAndSave('Actors:                ' + response.data.Actors);
         }
     );
 };
