@@ -43,13 +43,14 @@ This project is a LIRI (Language Interpretation and Recognition Interface); a co
 
 
 ## SCREENSHOTS
-![Welcome](./assets/images/rps_welcome.png)
+`Showing concert information`
+![Concert](./images/LIRI-concert.png)
 
-![player1 screen](./assets/images/rps_player1.png)
+`Showing movie information`
+![Movie](./images/LIRI-movie.png)
 
-![Welcome](./assets/images/rps_match.png)
-
-![Welcome](./assets/images/rps_viewer.png)
+`Showing song information`
+![Spotify](./images/LIRI-song.png)
 
 ## BUILDING TOOLS
 - Javascript and node.js
