@@ -54,10 +54,12 @@ This project is a LIRI (Language Interpretation and Recognition Interface); a co
 
 ## BUILDING TOOLS
 - Javascript and node.js
-- NPM packages:
+- NPM packages used:
     - AXIOS
     - dotenv
     - node-spotify-api
+    - dateformat
+    - fs
 
 ## QUESTIONS, COMMENTS AND CREDITS
 - Concert info courtesy of [Bands In Town](https://www.bandsintown.com/).
